@@ -1,24 +1,21 @@
-package com.karimi.mobilecodingchallenge
+package com.karimi.mobilecodingchallenge.ui
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
+import com.karimi.mobilecodingchallenge.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navigation_home -> {
-                message.setText(R.string.title_home)
+            R.id.navigation_trending -> {
+                showTrendingFragment()
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
-                message.setText(R.string.title_dashboard)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                message.setText(R.string.title_notifications)
+            R.id.navigation_settings -> {
+                showSettingsFragment()
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -31,4 +28,17 @@ class MainActivity : AppCompatActivity() {
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
+
+    fun showTrendingFragment() {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, TrendingFragment.newInstance())
+        transaction.commit()
+    }
+
+    fun showSettingsFragment() {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, SettingsFragment.newInstance())
+        transaction.commit()
+    }
+
 }
