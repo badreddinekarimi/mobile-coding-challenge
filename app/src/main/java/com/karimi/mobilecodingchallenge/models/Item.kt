@@ -1,6 +1,6 @@
 package com.karimi.mobilecodingchallenge.models
 
-data class Repository(
+data class Item(
     val id: Int,
     val node_id: String,
     val name: String,

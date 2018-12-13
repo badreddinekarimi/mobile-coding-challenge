@@ -1,20 +1,23 @@
 package com.karimi.mobilecodingchallenge.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.karimi.mobilecodingchallenge.R
-import com.karimi.mobilecodingchallenge.models.Repository
+import com.karimi.mobilecodingchallenge.models.Item
 
 
-class TrendingAdapter(var repositoriesList: ArrayList<Repository>) : RecyclerView.Adapter<TrendingAdapter.ViewHolder>() {
+class TrendingAdapter(var repositoriesList: ArrayList<Item>) : RecyclerView.Adapter<TrendingAdapter.ViewHolder>() {
 
     val TAG = "MealsAdapter"
-    var onItemClick: ((Repository) -> Unit)? = null
+    var onItemClick: ((Item) -> Unit)? = null
 
     lateinit var context: Context
 
@@ -49,8 +52,26 @@ class TrendingAdapter(var repositoriesList: ArrayList<Repository>) : RecyclerVie
             }
         }
 
-        fun bindItems(repository: Repository) {
+        @SuppressLint("SetTextI18n")
+        fun bindItems(item: Item) {
+            val repo_name = itemView.findViewById(R.id.label_repo_name) as TextView
+            val repo_desc = itemView.findViewById(R.id.label_repo_desc) as TextView
+            val repo_owner_name = itemView.findViewById(R.id.label_repo_owner_name) as TextView
+            val number_of_stars = itemView.findViewById(R.id.label_number_of_stars) as TextView
+            val img_owner = itemView.findViewById(R.id.img_owner) as ImageView
 
+            repo_name.text = item.name
+            repo_desc.text = item.description
+            repo_owner_name.text = item.owner.login
+
+            if(item.stargazers_count>1000)
+                number_of_stars.text = (item.stargazers_count/1000).toString() + "k"
+            else
+                number_of_stars.text = item.stargazers_count.toString()
+
+            Glide.with(context)
+                .load(item.owner.avatar_url)
+                .into(img_owner)
         }
 
 

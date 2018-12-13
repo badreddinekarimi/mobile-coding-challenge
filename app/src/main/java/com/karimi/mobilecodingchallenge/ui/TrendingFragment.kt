@@ -1,5 +1,6 @@
 package com.karimi.mobilecodingchallenge.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,8 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.karimi.mobilecodingchallenge.R
+import com.karimi.mobilecodingchallenge.models.Item
+import com.karimi.mobilecodingchallenge.network.Client
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-class TrendingFragment: Fragment(){
+class TrendingFragment : Fragment() {
 
     val TAG = "TrendingFragment"
 
@@ -57,18 +62,33 @@ class TrendingFragment: Fragment(){
         loadRepositories()
     }
 
+    @SuppressLint("CheckResult")
     fun loadRepositories() {
         writeToLog("loadRepositories")
 
-        adapter.repositoriesList = ArrayList()
-        adapter.notifyDataSetChanged()
+        try {
+            Client.getApiService().getRepositories()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        Log.e(TAG, "succeed loading !")
 
-        adapter.onItemClick = {
-            Log.e(TAG, "adapter.onItemClick : " + it.name)
+                        adapter.repositoriesList = it.items as ArrayList<Item>
+                        adapter.notifyDataSetChanged()
+
+                    }, {
+                        Log.e(TAG, "error loading : $it")
+                    }
+                )
+        } catch (e: Exception) {
+            Log.e(TAG, "Loading Exception : ${e.message}")
         }
+
     }
 
-    fun writeToLog(str: String){
+    fun writeToLog(str: String) {
         Log.e(TAG, str)
     }
+
 }
