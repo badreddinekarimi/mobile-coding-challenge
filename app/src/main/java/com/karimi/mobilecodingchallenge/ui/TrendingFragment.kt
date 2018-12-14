@@ -13,8 +13,10 @@ import android.widget.LinearLayout
 import com.karimi.mobilecodingchallenge.R
 import com.karimi.mobilecodingchallenge.models.Item
 import com.karimi.mobilecodingchallenge.network.Client
+import com.karimi.mobilecodingchallenge.utils.Utility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_trending.*
 
 class TrendingFragment : Fragment() {
 
@@ -67,22 +69,26 @@ class TrendingFragment : Fragment() {
         writeToLog("loadRepositories")
 
         try {
-            Client.getApiService().getRepositories()
+            Client.getApiService()
+                .getRepositories("created:>"+Utility.get30DaysAgoDate(),"stars", "desc")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete {
+                    progressBar.visibility = View.GONE
+                }
                 .subscribe(
                     {
-                        Log.e(TAG, "succeed loading !")
+                        writeToLog("succeed loading !")
 
                         adapter.repositoriesList = it.items as ArrayList<Item>
                         adapter.notifyDataSetChanged()
 
                     }, {
-                        Log.e(TAG, "error loading : $it")
+                        writeToLog("error loading : $it")
                     }
                 )
         } catch (e: Exception) {
-            Log.e(TAG, "Loading Exception : ${e.message}")
+            writeToLog("Loading Exception : ${e.message}")
         }
 
     }

@@ -32,7 +32,7 @@ class SettingsFragment: Fragment(){
     }
 
     fun init(){
-
+        writeToLog("init()")
     }
 
 

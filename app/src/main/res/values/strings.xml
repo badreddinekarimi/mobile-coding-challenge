@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">MobileCodingChallenge</string>
+
+    <!-- MainActivity : Navigation -->
     <string name="title_trending">Trending</string>
     <string name="title_settings">Settings</string>
+
+    <!-- activity_main.xml -->
+    <string name="trending_repos">Trending Repos</string>
+
 </resources>
